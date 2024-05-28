@@ -1,23 +1,56 @@
+import Classes.MyGraph;
+import Classes.WeightedGraph;
+import Searches.BFSearch;
+import Searches.DijkstraSearch;
+import Searches.Search;
+
 public class Main {
     public static void main(String[] args) {
 
-        MyGraph<String> graph = new MyGraph<>();
+        WeightedGraph<String> weightedGraph = new WeightedGraph<>(true);
+        fillWithWeights(weightedGraph);
 
-        graph.addVertex("Astana");
-        graph.addVertex("Almaty");
-        graph.addVertex("Petropavlovsk");
-        graph.addVertex("Pavlodar");
-        graph.addVertex("Shymkent");
-        graph.addVertex("Atyray");
+        System.out.println("Dijkstra:");
+        Search<String> djk = new DijkstraSearch<>(weightedGraph, "Almaty");
+        outputPath(djk, "Kyzylorda");
 
-        graph.addEdge("Astana", "Almaty");
-        graph.addEdge("Karaganda", "Astana");
-        graph.addEdge("Semey", "Shymkent");
-        graph.addEdge("Petropavlovsk", "Semey");
-        graph.addEdge("Shymkent", "Pavlodar");
 
-        System.out.println(graph.hasEdge("Astana", "Shymkent"));
-        System.out.println(graph.hasEdge("Astana", "Almaty"));
-        System.out.println(graph.hasEdge("Karaganda", "Pavlodar"));
+        System.out.println("--------------------------------");
+
+        MyGraph<String> graph = new MyGraph<>(true);
+        fillWithoutWeights(graph);
+
+        System.out.println("BFS:");
+        Search<String> bfs = new BFSearch<>(graph, "Almaty");
+        outputPath(bfs, "Kyzylorda");
+    }
+
+
+    public static void fillWithoutWeights(MyGraph<String> graph) {
+        graph.addEdge("Almaty", "Astana"); // 16 - 19
+        graph.addEdge("Shymkent", "Atyrau");
+        graph.addEdge("Atyrau", "Astana");
+        graph.addEdge("Almaty", "Shymkent");
+        graph.addEdge("Shymkent", "Astana");
+        graph.addEdge("Astana", "Kostanay");
+        graph.addEdge("Shymkent", "Kyzylorda");
+    }
+
+    public static void fillWithWeights(WeightedGraph<String> graph) {
+        graph.addEdge("Almaty", "Astana", 2.1);
+        graph.addEdge("Shymkent", "Atyrau", 7.8);
+        graph.addEdge("Atyrau", "Astana", 7.1);
+        graph.addEdge("Almaty", "Shymkent", 7.2);
+        graph.addEdge("Shymkent", "Astana", 3.9);
+        graph.addEdge("Astana", "Kostanay", 3.5);
+        graph.addEdge("Shymkent", "Kyzylorda", 5.4);
+    }
+
+    public static void outputPath(Search<String> search, String key) {
+        for (String v : search.pathTo(key)) {
+            System.out.print(v + " -> ");
+        }
+
+        System.out.println();
     }
 }
